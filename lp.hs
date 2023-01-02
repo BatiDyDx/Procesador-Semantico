@@ -79,11 +79,11 @@ top :: Prop
 top = Not Bottom
 
 -- Relaciones logicas - Secuente y equivalencia
-(~) :: Prop -> Prop -> Bool
-(~) p q = isTautology (iff p q)
+(~~) :: Prop -> Prop -> Bool
+(~~) p q = isTautology (iff p q)
 
 (|=) :: [Prop] -> Prop -> Bool
--- (|=)
+(|=) gamma p = isTautology (Imply (zipSet gamma) p)
 
 {-
  - Utilidades
@@ -99,6 +99,11 @@ atomsProp (And p q) = atomsProp p ++ atomsProp q
 atomsProp (Or p q) = atomsProp p ++ atomsProp q
 atomsProp (Imply p q) = atomsProp p ++ atomsProp q
 atomsProp (Not p) = atomsProp p
+
+zipSet :: [Prop] -> Prop
+zipSet [] = []
+zipSet [p] = p
+zipSet (p:ps) = And p (zipSet ps)
 
 elimRep :: Eq a => [a] -> [a]
 elimRep [] = []
