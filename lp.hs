@@ -35,8 +35,8 @@ getAtoms = elimRep . atomsProp
 -- sust p q c = p[q/c] donde c es el nombre de una variable atomica
 sust :: Prop -> Prop -> Char -> Prop
 sust Bottom _ _ = Bottom
-sust (Atom c') q c | c' == c = q
-                   | otherwise = (Atom c')
+sust (Atom c') q c  | c' == c = q
+                    | otherwise = (Atom c')
 sust (Not p) q c = Not (sust p q c)
 sust (And p q) r c = And (sust p r c) (sust q r c)
 sust (Or p q) r c = Or (sust p r c) (sust q r c)
@@ -83,10 +83,10 @@ top = Not Bottom
 (~~) p q = isTautology (iff p q)
 
 (|=) :: [Prop] -> Prop -> Bool
-(|=) gamma p = isTautology (Imply (zipSet gamma) p)
+(|=) gamma p = isTautology (Imply (setToProp gamma) p)
 
 {-
- - Utilidades
+- Utilidades
 -}
 
 find :: Eq a => a -> [(a,b)] -> b
@@ -100,10 +100,10 @@ atomsProp (Or p q) = atomsProp p ++ atomsProp q
 atomsProp (Imply p q) = atomsProp p ++ atomsProp q
 atomsProp (Not p) = atomsProp p
 
-zipSet :: [Prop] -> Prop
-zipSet [] = []
-zipSet [p] = p
-zipSet (p:ps) = And p (zipSet ps)
+setToProp :: [Prop] -> Prop
+setToProp [] = top
+setToProp [p] = p
+setToProp (p:ps) = And p (setToProp ps)
 
 elimRep :: Eq a => [a] -> [a]
 elimRep [] = []
@@ -112,3 +112,15 @@ elimRep (x:xs) = x : filter (/= x) (elimRep xs)
 getVals :: [Char] -> [Val]
 getVals [] = [[]]
 getVals (c:cs) = [(c, b) : v' | b <- [True, False], v' <- getVals cs]
+
+
+-- Class instances declaration
+
+instance Eq Prop where
+  (==) = (~~)
+
+{-
+instance Ord Prop where
+  (<) p q = [p] |= q
+  (<=) p q = ([p] < q) || (p == q)
+-}
