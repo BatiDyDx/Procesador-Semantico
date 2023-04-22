@@ -1,3 +1,5 @@
+module CTL where
+
 -- Computational Tree Logic (CTL)
 import qualified Data.Set as Set
 
