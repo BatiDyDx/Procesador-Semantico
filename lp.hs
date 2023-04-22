@@ -1,4 +1,5 @@
 -- Evaluador semantico para logicas de grado 0 (Logica Proposicional)
+module PropLogic where
 
 -- Tipo de dato recursivo para definir PROP
 data Prop = Bottom
